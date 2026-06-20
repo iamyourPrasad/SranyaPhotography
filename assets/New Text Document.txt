@@ -1,0 +1,15 @@
+assets/
+├── hero.jpg                      (1920×1080) — hero background
+├── about-team.jpg                (1000×1250) — about section
+├── portfolio-wedding-1.jpg       (800×1100)  — tall tile
+├── portfolio-drone-1.jpg         (1200×800)  — wide tile
+├── portfolio-candid-1.jpg        (800×800)
+├── portfolio-corporate-1.jpg     (800×800)
+├── portfolio-bridal-1.jpg        (800×1100)  — tall tile
+├── portfolio-prewedding-1.jpg    (1200×800)  — wide tile
+├── portfolio-birthday-1.jpg      (800×800)
+├── portfolio-engagement-1.jpg    (800×800)
+├── gallery-mockup.jpg            (900×700)   — client gallery section
+├── client-1.jpg                  (200×200)   — testimonial avatar
+├── client-2.jpg                  (200×200)   — testimonial avatar
+└── client-3.jpg                  (200×200)   — testimonial avatar
