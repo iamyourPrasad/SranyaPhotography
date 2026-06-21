@@ -499,11 +499,7 @@ ul { margin: 0; padding: 0; }
   align-items: center;
 }
 .about-media {
-  aspect-ratio: 4/5;
-  border-radius: var(--radius);
   width: 100%;
-  height: auto;
-  object-fit: cover;
 }
 .about-copy p {
   color: var(--stone);
@@ -573,14 +569,6 @@ ul { margin: 0; padding: 0; }
   border: 1px solid var(--line-on-dark);
   overflow: hidden;
 }
-.portfolio-item img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  display: block;
-  transition: transform 0.4s ease;
-}
-.portfolio-item:hover img { transform: scale(1.05); }
 .portfolio-item.size-tall { grid-row: span 2; }
 .portfolio-item.size-wide { grid-column: span 2; }
 
@@ -598,6 +586,20 @@ ul { margin: 0; padding: 0; }
 }
 
 .portfolio-cta { text-align: center; margin-top: 3rem; }
+
+.portfolio-empty-note {
+  max-width: var(--max-width);
+  margin: 0 auto;
+  text-align: center;
+  color: var(--ivory);
+  opacity: 0.65;
+  font-size: 0.88rem;
+}
+.portfolio-empty-note code {
+  background: rgba(245,237,226,0.1);
+  padding: 0.1rem 0.4rem;
+  border-radius: 2px;
+}
 
 /* ============ PACKAGES ============ */
 .packages {
@@ -752,11 +754,14 @@ ul { margin: 0; padding: 0; }
   gap: 0.8rem;
 }
 .t-avatar {
+  position: relative;
+  display: inline-block;
   width: 38px; height: 38px;
   border-radius: 50%;
   flex-shrink: 0;
   border: 1px solid var(--gold);
-  object-fit: cover;
+  overflow: hidden;
+  background: var(--ink-soft);
 }
 .t-name {
   display: block;
@@ -883,7 +888,112 @@ ul { margin: 0; padding: 0; }
   margin: 0;
 }
 
-/* ============ RESPONSIVE ============ */
+/* ============ SLIDERS ============ */
+
+/* Full slider (About section) */
+.slider {
+  position: relative;
+  overflow: hidden;
+  aspect-ratio: 4/5;
+  border-radius: var(--radius);
+  background: var(--ink-soft);
+}
+.slider-track {
+  display: flex;
+  height: 100%;
+  width: 100%;
+  transition: transform 0.5s ease;
+}
+.slider-track .slide {
+  flex: 0 0 100%;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.slider-empty {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 1.5rem;
+  color: var(--stone-light);
+  font-size: 0.85rem;
+  background: repeating-linear-gradient(135deg, var(--ivory-deep), var(--ivory-deep) 12px, #E2D5C0 12px, #E2D5C0 24px);
+}
+.slider-empty code {
+  background: rgba(0,0,0,0.06);
+  padding: 0.1rem 0.4rem;
+  border-radius: 2px;
+}
+.slider-arrow {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 2;
+  width: 38px; height: 38px;
+  border-radius: 50%;
+  border: none;
+  background: rgba(26, 22, 18, 0.55);
+  color: var(--ivory);
+  font-size: 0.9rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.2s ease;
+}
+.slider-arrow:hover { background: var(--sindoor); }
+.slider-arrow.prev { left: 12px; }
+.slider-arrow.next { right: 12px; }
+.slider-dots {
+  position: absolute;
+  bottom: 14px;
+  left: 0; right: 0;
+  z-index: 2;
+  display: flex;
+  justify-content: center;
+  gap: 0.5rem;
+}
+.slider-dot {
+  width: 8px; height: 8px;
+  border-radius: 50%;
+  border: 1px solid var(--ivory);
+  background: transparent;
+  cursor: pointer;
+  padding: 0;
+  transition: background 0.2s ease;
+}
+.slider-dot.active { background: var(--ivory); }
+
+/* Tile slider (Portfolio + Testimonial avatars): stacked crossfade */
+.portfolio-item img,
+.t-avatar img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: 0;
+  transition: opacity 0.8s ease;
+}
+.portfolio-item img.active,
+.t-avatar img.active {
+  opacity: 1;
+}
+.portfolio-item:hover img.active { transform: scale(1.05); transition: opacity 0.8s ease, transform 0.4s ease; }
+.tile-slider-empty {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: repeating-linear-gradient(135deg, var(--ivory-deep), var(--ivory-deep) 12px, #E2D5C0 12px, #E2D5C0 24px);
+}
+.tile-slider-empty .placeholder-label {
+  font-size: 0.7rem;
+  background: rgba(245,237,226,0.85);
+  padding: 0.4rem 0.7rem;
+}
 @media (max-width: 980px) {
   .main-nav { display: none; }
   .menu-toggle { display: flex; }

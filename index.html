@@ -93,7 +93,12 @@
 
 <!-- ============ ABOUT ============ -->
 <section class="about" id="about">
-  <img src="assets/about-team.jpg" alt="Saranya Events &amp; Photography team" class="about-media">
+  <div class="slider about-media" data-slider data-folder="assets/About" aria-label="Studio and team photos">
+    <div class="slider-track"></div>
+    <button class="slider-arrow prev" aria-label="Previous photo">&#10094;</button>
+    <button class="slider-arrow next" aria-label="Next photo">&#10095;</button>
+    <div class="slider-dots"></div>
+  </div>
   <div class="about-copy">
     <p class="section-eyebrow">About Us</p>
     <h2 class="section-title">We don't just take photographs.<br><em>We keep memories.</em></h2>
@@ -220,16 +225,8 @@
     <h2 class="section-title">Moments we've kept</h2>
   </div>
 
-  <div class="portfolio-grid">
-    <figure class="portfolio-item size-tall"><img src="assets/portfolio-wedding-1.jpg" alt="Wedding photography"></figure>
-    <figure class="portfolio-item size-wide"><img src="assets/portfolio-drone-1.jpg" alt="Drone aerial coverage"></figure>
-    <figure class="portfolio-item"><img src="assets/portfolio-candid-1.jpg" alt="Candid photography"></figure>
-    <figure class="portfolio-item"><img src="assets/portfolio-corporate-1.jpg" alt="Corporate event coverage"></figure>
-    <figure class="portfolio-item size-tall"><img src="assets/portfolio-bridal-1.jpg" alt="Bridal portrait session"></figure>
-    <figure class="portfolio-item size-wide"><img src="assets/portfolio-prewedding-1.jpg" alt="Pre-wedding shoot"></figure>
-    <figure class="portfolio-item"><img src="assets/portfolio-birthday-1.jpg" alt="Birthday celebration coverage"></figure>
-    <figure class="portfolio-item"><img src="assets/portfolio-engagement-1.jpg" alt="Engagement photography"></figure>
-  </div>
+  <div class="portfolio-grid" id="portfolioGrid" data-folder="assets/Portfolio"></div>
+  <p class="portfolio-empty-note" id="portfolioEmptyNote" hidden>Add photos to <code>assets/Portfolio/</code> and list them in its <code>manifest.json</code> to populate this grid.</p>
 
   <div class="portfolio-cta">
     <a href="#contact" class="btn btn-outline-light">See full portfolio</a>
@@ -322,7 +319,7 @@
     <figure class="testimonial-card">
       <blockquote>"They captured emotions we didn't even know were happening. Watching the film back, we noticed things we missed on the day itself."</blockquote>
       <figcaption>
-        <img src="assets/client-1.jpg" alt="" class="t-avatar">
+        <span class="t-avatar" data-tile-slider data-folder="assets/Testimonials"></span>
         <span>
           <span class="t-name">Client Name</span>
           <span class="t-event">Wedding, Hyderabad</span>
@@ -333,7 +330,7 @@
     <figure class="testimonial-card">
       <blockquote>"Professional from the first call to final delivery. The drone shots of the venue alone made the album worth it."</blockquote>
       <figcaption>
-        <img src="assets/client-2.jpg" alt="" class="t-avatar">
+        <span class="t-avatar" data-tile-slider data-folder="assets/Testimonials"></span>
         <span>
           <span class="t-name">Client Name</span>
           <span class="t-event">Corporate Event</span>
@@ -344,7 +341,7 @@
     <figure class="testimonial-card">
       <blockquote>"We restored my grandmother's 40-year-old wedding photo and it looked brand new. Genuinely emotional moment for our whole family."</blockquote>
       <figcaption>
-        <img src="assets/client-3.jpg" alt="" class="t-avatar">
+        <span class="t-avatar" data-tile-slider data-folder="assets/Testimonials"></span>
         <span>
           <span class="t-name">Client Name</span>
           <span class="t-event">AI Photo Restoration</span>
