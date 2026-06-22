@@ -203,13 +203,30 @@ async function initTestimonials() {
   const grid = document.getElementById('testimonialsGrid');
   if (!grid) return;
 
-  const clients = (grid.dataset.clients || '')
-    .split(',')
-    .map((c) => c.trim())
-    .filter(Boolean);
-  if (!clients.length) return;
+  const baseFolder = grid.dataset.folder;
+  if (!baseFolder) return;
 
-  const baseFolder = 'assets/Testimonials';
+  // The list of client folders lives in one small index file at
+  // assets/Testimonials/clients-index.json, e.g.:
+  //   ["client-1", "client-2", "client-3", "client-4"]
+  // Create a new assets/Testimonials/client-N/ folder with its own
+  // data.json, then add "client-N" to that list — the card appears
+  // automatically, no other editing needed.
+  let clients = [];
+  try {
+    const res = await fetch(`${baseFolder}/clients-index.json`, { cache: 'no-store' });
+    if (res.ok) {
+      const list = await res.json();
+      clients = Array.isArray(list) ? list.filter(Boolean) : [];
+    }
+  } catch {
+    clients = [];
+  }
+
+  if (!clients.length) {
+    grid.innerHTML = `<p class="testimonial-empty">Add client folders and list them in <code>${baseFolder}/clients-index.json</code> to show testimonials here.</p>`;
+    return;
+  }
 
   const cards = await Promise.all(
     clients.map(async (client, i) => {
