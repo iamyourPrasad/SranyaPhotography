@@ -177,51 +177,110 @@ async function initPortfolioGrid() {
   applyRevealAnimation(grid.querySelectorAll('.portfolio-item'));
 }
 
-// ---- Tile slider (Testimonial avatars only): auto-cycle, no UI chrome ----
-// Avatars pull from a shared image pool and offset their starting frame so
-// neighboring avatars don't all show the same photo at once.
-async function initTileSliders(containerSelector, folderAttrSource) {
-  const tiles = Array.from(document.querySelectorAll(containerSelector));
-  if (!tiles.length) return;
+// ---- Testimonial cards: built entirely from assets/Testimonials/<client>/data.json ----
+// Each client folder is self-contained: one data.json holds the quote, name,
+// event label, and the list of photo filenames (manifest) for that person.
+// Example assets/Testimonials/client-1/data.json:
+//   {
+//     "quote": "They captured emotions we didn't even know were happening.",
+//     "name": "Priya & Arjun",
+//     "event": "Wedding, Hyderabad",
+//     "photos": ["priya.jpg"]
+//   }
+// Drop the photo(s) into that same folder and list the filenames in "photos".
+async function loadClientData(folder) {
+  try {
+    const res = await fetch(`${folder}/data.json`, { cache: 'no-store' });
+    if (!res.ok) return null;
+    const data = await res.json();
+    return data && typeof data === 'object' ? data : null;
+  } catch {
+    return null;
+  }
+}
 
-  const folder = folderAttrSource || tiles[0].dataset.folder ||
-    tiles[0].closest('[data-folder]')?.dataset.folder;
-  if (!folder) return;
+async function initTestimonials() {
+  const grid = document.getElementById('testimonialsGrid');
+  if (!grid) return;
 
-  const files = await loadManifest(folder);
+  const clients = (grid.dataset.clients || '')
+    .split(',')
+    .map((c) => c.trim())
+    .filter(Boolean);
+  if (!clients.length) return;
 
-  tiles.forEach((tile, tileIndex) => {
-    if (!files.length) {
-      tile.classList.add('tile-slider-empty');
-      tile.innerHTML = `<span class="placeholder-label">Add photos to ${folder}/</span>`;
-      return;
-    }
+  const baseFolder = 'assets/Testimonials';
 
-    const imgs = files.map((f) => {
-      const img = document.createElement('img');
-      img.src = `${folder}/${f}`;
-      img.alt = '';
-      img.draggable = false;
-      return img;
-    });
-    imgs.forEach((img) => tile.appendChild(img));
+  const cards = await Promise.all(
+    clients.map(async (client, i) => {
+      const folder = `${baseFolder}/${client}`;
+      const data = await loadClientData(folder);
 
-    let current = tileIndex % files.length;
-    imgs[current].classList.add('active');
+      const card = document.createElement('figure');
+      card.className = 'testimonial-card';
 
-    if (files.length > 1) {
-      setInterval(() => {
-        imgs[current].classList.remove('active');
-        current = (current + 1) % files.length;
+      if (!data) {
+        card.innerHTML = `<blockquote class="testimonial-empty">Add ${folder}/data.json with quote, name, event and photos to fill this card.</blockquote>`;
+        return card;
+      }
+
+      const quote = data.quote || '';
+      const name = data.name || 'Client Name';
+      const event = data.event || '';
+      const photos = Array.isArray(data.photos) ? data.photos.filter(Boolean) : [];
+
+      card.innerHTML = `
+        <blockquote></blockquote>
+        <figcaption>
+          <span class="t-avatar"></span>
+          <span>
+            <span class="t-name"></span>
+            <span class="t-event"></span>
+          </span>
+        </figcaption>
+      `;
+      // Set all text via textContent (not innerHTML interpolation) so any
+      // characters typed in data.json can't break or inject into markup.
+      card.querySelector('blockquote').textContent = `"${quote}"`;
+      card.querySelector('.t-name').textContent = name;
+      card.querySelector('.t-event').textContent = event;
+
+      const avatar = card.querySelector('.t-avatar');
+      if (!photos.length) {
+        avatar.classList.add('tile-slider-empty');
+        avatar.innerHTML = `<span class="placeholder-label">Add photo</span>`;
+      } else {
+        const imgs = photos.map((f) => {
+          const img = document.createElement('img');
+          img.src = `${folder}/${f}`;
+          img.alt = '';
+          img.draggable = false;
+          return img;
+        });
+        imgs.forEach((img) => avatar.appendChild(img));
+        let current = 0;
         imgs[current].classList.add('active');
-      }, AUTO_ADVANCE_MS + tileIndex * 350); // slight stagger per tile
-    }
-  });
+        if (photos.length > 1) {
+          setInterval(() => {
+            imgs[current].classList.remove('active');
+            current = (current + 1) % photos.length;
+            imgs[current].classList.add('active');
+          }, AUTO_ADVANCE_MS + i * 350);
+        }
+      }
+
+      return card;
+    })
+  );
+
+  grid.innerHTML = '';
+  cards.forEach((card) => grid.appendChild(card));
+  applyRevealAnimation(grid.querySelectorAll('.testimonial-card'));
 }
 
 document.querySelectorAll('[data-slider]').forEach(initFullSlider);
 initPortfolioGrid();
-initTileSliders('.t-avatar[data-tile-slider]');
+initTestimonials();
 
 // ===== Scroll-reveal (shared helper) =====
 let revealObserver = null;
@@ -247,5 +306,5 @@ function applyRevealAnimation(elements) {
 }
 
 applyRevealAnimation(
-  document.querySelectorAll('.service-card, .package-card, .testimonial-card')
+  document.querySelectorAll('.service-card, .package-card')
 );
