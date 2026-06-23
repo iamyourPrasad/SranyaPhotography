@@ -208,7 +208,13 @@ async function loadClientData(folder) {
 }
 
 // Builds one testimonial <figure> card from a client's data.json.
-async function buildTestimonialCard(baseFolder, client, staggerIndex) {
+// Example assets/Testimonials/client-1/data.json:
+//   {
+//     "quote": "They captured emotions we didn't even know were happening.",
+//     "name": "Priya & Arjun",
+//     "event": "Wedding, Hyderabad"
+//   }
+async function buildTestimonialCard(baseFolder, client) {
   const folder = `${baseFolder}/${client}`;
   const data = await loadClientData(folder);
 
@@ -216,54 +222,29 @@ async function buildTestimonialCard(baseFolder, client, staggerIndex) {
   card.className = 'testimonial-card';
 
   if (!data) {
-    card.innerHTML = `<blockquote class="testimonial-empty">Add ${folder}/data.json with quote, name, event and photos to fill this card.</blockquote>`;
+    card.innerHTML = `<blockquote class="testimonial-empty">Add ${folder}/data.json with quote, name and event to fill this card.</blockquote>`;
     return card;
   }
 
   const quote = data.quote || '';
   const name = data.name || 'Client Name';
   const event = data.event || '';
-  const photos = Array.isArray(data.photos) ? data.photos.filter(Boolean) : [];
 
   card.innerHTML = `
+    <svg class="t-quote-icon" viewBox="0 0 32 24" aria-hidden="true">
+      <path d="M9.5 0C4.3 0 0 4.3 0 9.5c0 4.6 3.2 8.4 7.5 9.3-.4 2-1.8 3.7-3.9 4.9l1 1.3c4.4-1.6 7.9-5.3 7.9-11V9.5C12.5 4.3 8.2 0 9.5 0zm17 0c-5.2 0-9.5 4.3-9.5 9.5 0 4.6 3.2 8.4 7.5 9.3-.4 2-1.8 3.7-3.9 4.9l1 1.3c4.4-1.6 7.9-5.3 7.9-11V9.5C29.5 4.3 27.7 0 26.5 0z"/>
+    </svg>
     <blockquote></blockquote>
     <figcaption>
-      <span class="t-avatar"></span>
-      <span>
-        <span class="t-name"></span>
-        <span class="t-event"></span>
-      </span>
+      <span class="t-name"></span>
+      <span class="t-event"></span>
     </figcaption>
   `;
   // Set all text via textContent (not innerHTML interpolation) so any
   // characters typed in data.json can't break or inject into markup.
-  card.querySelector('blockquote').textContent = `"${quote}"`;
+  card.querySelector('blockquote').textContent = quote;
   card.querySelector('.t-name').textContent = name;
   card.querySelector('.t-event').textContent = event;
-
-  const avatar = card.querySelector('.t-avatar');
-  if (!photos.length) {
-    avatar.classList.add('tile-slider-empty');
-    avatar.innerHTML = `<span class="placeholder-label">Add photo</span>`;
-  } else {
-    const imgs = photos.map((f) => {
-      const img = document.createElement('img');
-      img.src = `${folder}/${f}`;
-      img.alt = '';
-      img.draggable = false;
-      return img;
-    });
-    imgs.forEach((img) => avatar.appendChild(img));
-    let current = 0;
-    imgs[current].classList.add('active');
-    if (photos.length > 1) {
-      setInterval(() => {
-        imgs[current].classList.remove('active');
-        current = (current + 1) % photos.length;
-        imgs[current].classList.add('active');
-      }, AUTO_ADVANCE_MS + staggerIndex * 350);
-    }
-  }
 
   return card;
 }
@@ -306,7 +287,7 @@ async function initTestimonials() {
   }
 
   const cards = await Promise.all(
-    clients.map((client, i) => buildTestimonialCard(baseFolder, client, i))
+    clients.map((client) => buildTestimonialCard(baseFolder, client))
   );
 
   function cardsPerPage() {

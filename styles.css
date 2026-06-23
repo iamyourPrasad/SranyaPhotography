@@ -772,21 +772,34 @@ ul { margin: 0; padding: 0; }
 }
 .testimonial-card {
   margin: 0;
-  padding: 2.2rem;
+  padding: 2.6rem 2.2rem;
   border: 1px solid var(--line-on-dark);
+  border-radius: 14px;
+  background: rgba(245, 237, 226, 0.02);
+  display: flex;
+  flex-direction: column;
+}
+.t-quote-icon {
+  width: 32px;
+  height: 24px;
+  fill: var(--gold);
+  margin-bottom: 1.4rem;
+  flex-shrink: 0;
 }
 .testimonial-card blockquote {
-  margin: 0 0 1.6rem;
-  font-family: var(--font-display);
-  font-style: italic;
+  margin: 0 0 2rem;
+  font-family: var(--font-body);
+  font-style: normal;
   font-size: 1.05rem;
-  line-height: 1.5;
-  color: var(--ivory);
+  line-height: 1.6;
+  color: rgba(245, 237, 226, 0.92);
+  flex-grow: 1;
 }
 .testimonial-card figcaption {
   display: flex;
-  align-items: center;
-  gap: 0.8rem;
+  flex-direction: column;
+  gap: 0.15rem;
+  margin-top: auto;
 }
 .testimonial-empty {
   margin: 0;
@@ -825,26 +838,17 @@ ul { margin: 0; padding: 0; }
 .testimonial-carousel .slider-dot.active {
   background: var(--gold-bright);
 }
-.t-avatar {
-  position: relative;
-  display: inline-block;
-  width: 38px; height: 38px;
-  border-radius: 50%;
-  flex-shrink: 0;
-  border: 1px solid var(--gold);
-  overflow: hidden;
-  background: var(--ink-soft);
-}
 .t-name {
   display: block;
-  font-size: 0.85rem;
-  font-weight: 700;
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 1rem;
   color: var(--ivory);
 }
 .t-event {
   display: block;
-  font-size: 0.76rem;
-  color: var(--gold-bright);
+  font-size: 0.82rem;
+  color: rgba(245, 237, 226, 0.55);
 }
 
 /* ============ CONTACT ============ */
@@ -863,62 +867,91 @@ ul { margin: 0; padding: 0; }
   margin-top: 2rem;
   display: flex;
   flex-direction: column;
-  gap: 0;
-  border-top: 1px solid var(--line);
+  gap: 1.4rem;
 }
 .contact-row {
   display: flex;
-  justify-content: space-between;
-  padding: 1.1rem 0;
-  border-bottom: 1px solid var(--line);
+  align-items: center;
+  gap: 1.1rem;
   font-size: 0.95rem;
+  transition: transform 0.2s ease;
+}
+a.contact-row:hover {
+  transform: translateX(3px);
+}
+.contact-icon {
+  flex-shrink: 0;
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background: var(--ivory-deep);
+  color: var(--sindoor);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.contact-icon svg {
+  width: 20px;
+  height: 20px;
+}
+.contact-text {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
 }
 .contact-label {
   text-transform: uppercase;
   font-size: 0.7rem;
   letter-spacing: 0.1em;
-  color: var(--gold);
+  color: var(--stone-light);
   font-weight: 700;
 }
 
 .contact-form {
   background: var(--ivory-deep);
   border: 1px solid var(--line);
-  padding: clamp(1.6rem, 3vw, 2.4rem);
+  padding: clamp(1.2rem, 2vw, 1.6rem);
 }
-.form-row { margin-bottom: 1.2rem; }
+.form-row { margin-bottom: 0.85rem; }
 .form-row.two-col {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 1rem;
+  gap: 0.85rem;
 }
 .contact-form label {
   display: block;
-  font-size: 0.78rem;
+  font-size: 0.72rem;
   letter-spacing: 0.04em;
   text-transform: uppercase;
   font-weight: 600;
   color: var(--stone);
-  margin-bottom: 0.5rem;
+  margin-bottom: 0.35rem;
 }
 .contact-form input,
 .contact-form select,
 .contact-form textarea {
   width: 100%;
   font-family: var(--font-body);
-  font-size: 0.95rem;
-  padding: 0.8rem 0.9rem;
+  font-size: 0.88rem;
+  padding: 0.6rem 0.75rem;
   border: 1px solid var(--line);
   background: var(--ivory);
   color: var(--ink);
   border-radius: var(--radius);
   resize: vertical;
 }
+.contact-form textarea {
+  min-height: 80px;
+}
 .contact-form input:focus,
 .contact-form select:focus,
 .contact-form textarea:focus {
   outline: none;
   border-color: var(--sindoor);
+}
+.contact-form .btn {
+  padding: 0.75rem 1.6rem;
+  font-size: 0.78rem;
 }
 .form-note {
   margin: 0.9rem 0 0;
@@ -1109,9 +1142,8 @@ ul { margin: 0; padding: 0; }
 }
 .slider-dot.active { background: var(--ivory); }
 
-/* Tile slider (Portfolio + Testimonial avatars): stacked crossfade */
-.portfolio-item img,
-.t-avatar img {
+/* Portfolio tile stacked crossfade */
+.portfolio-item img {
   position: absolute;
   inset: 0;
   width: 100%;
@@ -1120,22 +1152,10 @@ ul { margin: 0; padding: 0; }
   opacity: 0;
   transition: opacity 0.8s ease;
 }
-.portfolio-item img.active,
-.t-avatar img.active {
+.portfolio-item img.active {
   opacity: 1;
 }
 .portfolio-item:hover img.active { transform: scale(1.05); transition: opacity 0.8s ease, transform 0.4s ease; }
-.tile-slider-empty {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: repeating-linear-gradient(135deg, var(--ivory-deep), var(--ivory-deep) 12px, #E2D5C0 12px, #E2D5C0 24px);
-}
-.tile-slider-empty .placeholder-label {
-  font-size: 0.7rem;
-  background: rgba(245,237,226,0.85);
-  padding: 0.4rem 0.7rem;
-}
 @media (max-width: 980px) {
   .main-nav { display: none; }
   .menu-toggle { display: flex; }
