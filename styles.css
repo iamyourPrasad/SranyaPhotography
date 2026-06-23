@@ -64,6 +64,18 @@ ul { margin: 0; padding: 0; }
   clip: rect(0 0 0 0);
 }
 
+/* Honeypot spam-trap field: hidden from sighted users and assistive tech.
+   Real visitors never see or fill this in; bots that auto-fill every
+   field will, which is how the form backend flags them as spam. */
+.honeypot-field {
+  position: absolute !important;
+  left: -9999px !important;
+  width: 1px !important;
+  height: 1px !important;
+  opacity: 0 !important;
+  pointer-events: none !important;
+}
+
 :focus-visible {
   outline: 2px solid var(--sindoor);
   outline-offset: 3px;

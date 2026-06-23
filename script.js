@@ -33,11 +33,12 @@ document.querySelectorAll('.mobile-nav a').forEach(link => {
 const yearEl = document.getElementById('year');
 if (yearEl) yearEl.textContent = new Date().getFullYear();
 
-// ===== Booking form (FormSubmit — see https://formsubmit.co) =====
+// ===== Booking form (Web3Forms — see https://web3forms.com) =====
 // Submissions POST to the form's `action` URL (set in index.html).
-// On the very first submission to a new email address, FormSubmit sends
-// a one-time confirmation link to that inbox — it must be clicked once
-// before mail starts delivering for real.
+// Needs a free Access Key from web3forms.com tied to your email —
+// paste it into the hidden "access_key" input in index.html.
+// No confirmation-link step like some other form services; once the
+// access_key is in place, submissions arrive in that inbox right away.
 const bookingForm = document.getElementById('bookingForm');
 const formNote = document.getElementById('formNote');
 
@@ -53,11 +54,11 @@ if (bookingForm) {
     }
 
     formNote.textContent = 'Sending your enquiry...';
-    // No preventDefault here — the form submits to FormSubmit for real.
+    // No preventDefault here — the form submits to Web3Forms for real.
   });
 }
 
-// Show a success note if we've just come back from a FormSubmit redirect
+// Show a success note if we've just come back from the Web3Forms redirect
 if (window.location.search.includes('sent=1') || window.location.hash.includes('sent=1')) {
   if (formNote) {
     formNote.textContent = "Thanks! We've received your enquiry and will reach out shortly.";
